@@ -1,0 +1,1009 @@
+/************************************************
+
+Stylesheet: Main Stylesheet
+
+*************************************************/
+
+/*********************
+GENERAL STYLES
+*********************/
+body {
+	font-family: 'proxima-nova', arial, sans-serif;
+	font-weight: 300;
+	font-size: 16px;
+	line-height: 110%;
+}
+
+/*********************
+LINK STYLES
+*********************/
+a, a:visited {
+
+	// Mobile tap color
+	&:link {
+		//Highlight links on iOS, Similar to :hover for mobile devices.
+		-webkit-tap-highlight-color : rgba( 0, 0, 0, 0.3 );
+	}
+}
+
+/*********************
+H1, H2, H3, H4, H5 P STYLES
+*********************/
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5 {
+	font-family: 'proxima-nova', arial, sans-serif;
+	line-height: 105%;
+
+	// Removing text decoration from all headline links
+	a {
+		text-decoration: none;
+	}
+}
+
+h1, .h1 {
+	margin-bottom: 1em;
+	color: $purple;
+}
+
+h2, .h2 {
+
+}
+
+h3, .h3 {
+
+}
+
+h4, .h4 {
+
+}
+h5, .h5 {
+
+}
+
+#content blockquote {
+	color:$purple;
+	font-size:1.4rem;
+	font-weight:400;
+	border:1px solid $light-gray;
+	margin-left:1em;
+	p {
+		line-height:1.2;
+	}
+	em {
+		display:block;
+		font-size:1rem;
+		line-height:1.4;
+		margin-top:0.5rem;
+	}
+}
+
+.max-width {
+	max-width: 1180px;
+	margin: 0 auto;
+}
+
+#interior {
+	background: url('../images/interior_bkgd.jpg') no-repeat top;
+	.page {
+		margin-top: 100px;
+		@include breakpoint(medium){
+			margin-top: 130px;
+		}
+		h1 {
+			color: #FFF;
+		}
+		.large-12.columns {
+			padding: 0;
+		}
+	}
+}
+
+/*********************
+HEADER STYLES
+*********************/
+.header {
+	ul.off-canvas-list li {
+		list-style: none;
+	}
+	height:125px;
+	background: $light-gray;
+	border-bottom: 1px solid $dark-gray;
+}
+.menu .active > a {
+	background: transparent;
+}
+
+
+
+
+    
+/*********************
+NAVIGATION STYLES
+*********************/
+.top-bar {
+	font-family: 'proxima-nova-condensed', arial, sans-serif;
+	font-weight: 500;
+	text-transform: uppercase;
+	background-color: $purple;
+	height: 75px;
+	@include breakpoint(medium){
+		height:150px;
+	}
+	@include breakpoint(large){
+		height:75px;
+	}
+	padding: 0;
+	position: fixed;
+	top:0;
+	left:0;
+	right:0;
+	width:100%;
+	z-index: 1000;
+	.title-area {
+		z-index: 1;
+	}
+	ul {
+		background: none;
+		color: $white;
+		a {
+			margin-top:0.7rem;
+			margin-bottom:0.7rem;
+			padding-top:0;
+			padding-bottom:0;
+			border-right:1px solid #999a95;
+			color: $white;
+			font-size:16px;
+			@include breakpoint(medium){
+				font-size:18px;
+			}
+			@include breakpoint(large){
+				font-size:20px;
+			}
+		}
+		ul a {
+			margin-top:1rem;
+			margin-bottom:1rem;
+		}
+		.no-touchevents & {
+			a:hover {
+				color: #d4cbfc;
+			}
+		}
+		a:focus {
+			color:#000;
+		}
+		li:last-child a {
+			border-right:none;
+		}
+		
+	}
+}
+.dropdown.menu.medium-horizontal > li.is-dropdown-submenu-parent > a {
+	padding-right:2.25rem;
+}
+.dropdown.menu.medium-horizontal > li.is-dropdown-submenu-parent > a:after {
+	border-color:#fff transparent transparent;
+	margin-right:0.75rem;
+}
+.dropdown.menu.medium-horizontal > li.is-dropdown-submenu-parent ul {
+	background-color:$purple;
+}
+.dropdown.menu.medium-horizontal > li.is-dropdown-submenu-parent ul a {
+	font-size:1rem;
+	border:none;
+}
+
+
+
+
+.top-bar-left {
+	min-height: 75px;
+    padding: 18px 0 0;
+	display:none;
+	@include breakpoint(medium){
+		display:block;
+	}
+}
+.top-bar-right {
+	min-height: 75px;
+	padding: 18px 0 0;
+	background: $gold;
+}
+.top-bar-right.leave-site {
+	li {
+		display:block;
+	}
+	a {
+		color:#000;
+		display:block;
+		text-align:left;
+		.fa {
+			position: relative;
+			top:-2px;
+			right:-4px;
+		}
+		.fa {
+			display:none;
+		}
+	}
+	width:50%;
+	text-align:right;
+	float:left;
+	@include breakpoint(medium){
+		width:100%;
+		float:none;
+		a .fa {
+			display:inline;
+		}
+	}
+	@include breakpoint(large){
+		width:auto;
+		float:right;
+	}
+}
+.top-bar-right.show-for-small-only {
+    background: $purple;
+	li {
+		display:block;
+	}
+	.menu-icon {
+		float:right;
+		margin-right:1rem;
+		margin-left:1rem;
+	}
+	@media all and (max-width:767px){
+		width:50%;
+		text-align:right;
+		float:right;
+	}
+}
+.off-canvas-wrapper {
+	background:$purple;
+	#off-canvas {
+		background:$purple;
+		.vertical.menu {
+			padding-top:1rem;
+		}
+		li.menu-item-has-children > ul {
+			padding-top: 0 !important;
+			padding-left: 1rem;
+		}
+		* {
+			color:#fff;
+		}
+	}
+}
+.off-canvas-list {
+	ul {
+		margin-left: 0;
+		li {
+			a {
+				border-bottom: 0px;
+			}
+		}
+		.dropdown {
+			margin-left: 20px;
+		}
+	}
+}
+
+
+
+/*********************
+UNDERNAVIGATION STYLES
+*********************/
+.undernav {
+	margin-top:75px;
+	@include breakpoint(medium){
+		margin-top:150px;
+	}
+	@include breakpoint(large){
+		margin-top:75px;
+	}
+	clear:both;
+	position: relative;
+	padding:35px 0 0 0;
+	.safelogo a {
+		position: absolute;
+		top:23px;
+		background-image: url('../images/safe_logo.jpg');
+		background-repeat: no-repeat;
+		display: inline-block;
+		min-height: 144px;
+		width: 145px;
+		text-indent: -9999px;
+		z-index: 100;
+	}
+	.crisis-line {
+		font-family: 'proxima-nova-condensed', arial, sans-serif;
+		margin-left: 160px;
+		color: $purple;
+		font-size: 1.2em;
+		width: 225px;
+		float: left;
+		span {
+			font-size: 1.2em;
+			display: block;
+			line-height: 1em;
+		}
+		@include breakpoint(medium){
+			margin-left: 170px;
+			width: 175px;
+			span {
+				font-size: 1.5em;
+			}
+		}
+		@include breakpoint(large){
+			width: 225px;
+			span {
+				font-size: 2em;
+			}
+		}
+	}
+	.take-action {
+		background: #fff;
+		padding:0 0 0 0;
+		float: right;
+		font-family: 'proxima-nova-condensed', arial, sans-serif;
+		font-size: 1.25em;
+		letter-spacing:-1px;
+		text-transform: uppercase;
+		width:100%;
+		margin-top:20px;
+		padding-top:40px;
+		margin-bottom:10px;
+		@include breakpoint(medium){
+			background: none;
+			padding-top: 10px;
+			width:auto;
+			margin-top:0px;
+			font-size: 1.19em;
+		}
+		@include breakpoint(large){
+			font-size: 2.22em;
+			margin-bottom:0;
+		}
+		li a {
+			padding: 0.7rem;
+			@include breakpoint(medium){
+				padding: 0.5rem;
+			}
+		}
+		li,
+		li a {
+			display:inline;
+			line-height: 2;
+		}
+		li.get-help a {
+			color: $teal;
+		}
+		li.donate a {
+			color: $blue;
+		}
+		li.volunteer a {
+			color: $purple;
+		}
+		li a:after {
+			content: '›';
+			font-size: .8em;
+			margin-left: 5px;
+			color:$teal;
+			font-weight:bold;
+		}
+	}
+}
+
+.kicker {
+	border-top: solid 1px $light-gray;
+	margin:4em auto 3em;
+	display: block;	
+	clear:both;
+	.kicker-type {
+		border: solid 1px $light-gray;
+		outline: solid 10px #FFF;
+		outline-offset: 0px;
+	    width: 200px;
+	    margin: -1.2em auto 0;
+	    text-align: center;
+	    font-family: 'proxima-nova-condensed', arial, sans-serif;
+	    text-transform: uppercase;
+	    color: $dark-gray;
+	    padding: 5px 0;
+	    background: $white;
+	}
+}
+
+.our-services {
+	min-height: 350px;
+	h2 {
+		display:none;
+	}
+}
+
+
+.thank-you-donors-and-volunteer-advocates .columns {
+		font-size:.9em;
+		padding-top: 10px;
+}
+
+
+
+
+/*********************
+HERO STYLES
+*********************/
+#hero {
+	clear:both;
+	position: relative;
+	overflow: hidden;
+	img {
+		position:absolute;
+		height:600px;
+		width:auto !important;
+		max-width:none;
+		z-index: 1;
+		right:-50%;
+		@include breakpoint(medium){
+			height:auto;
+			width:auto;
+			right:auto;
+			max-width:100%;
+			position: relative;
+		}
+	}
+	.quote {
+		width: 100%;
+		width:100%;
+		padding-top:20px;
+		padding-bottom:20px;
+		position: relative;
+		z-index: 5;
+		@include breakpoint(medium){
+			position:absolute;
+			width:80%;
+			bottom: 10%;
+			padding-top:0;
+			padding-bottom:0;
+		}
+		@include breakpoint(large){
+			width: 40%;
+		}
+		font-family: 'proxima-nova-condensed', arial, sans-serif;
+		color: #FFF;
+		text-shadow: 2px 2px 3px $black;
+		padding-left: 20px ;
+		blockquote, blockquote p {
+			font-size: 1.5em;
+			line-height: 1.2;
+			color: $white;
+			border: none;
+			padding: 0;
+		}
+	}
+}
+
+/*********************
+CRISIS BOX
+*********************/
+
+	.crisis-line-body {
+		font-family: 'proxima-nova-condensed', arial, sans-serif;
+		padding: 10px;
+		border: 1px solid $purple;
+		display: inline-block;
+		> div {
+			padding-bottom: 5px;
+			text-align: center;
+			@include breakpoint(medium){
+				float: left;
+				padding-bottom: 0;
+				text-align: left;
+			}
+		}
+		.intro {
+			color: $teal;
+			font-size: 1em;
+			font-weight: bold;
+			@include breakpoint(medium){
+				padding: 0 10px 0 0;
+			}
+		}
+		.phone {
+			font-size: 2.4em;
+			color: $purple;
+			line-height: 1.1;
+			text-align: center;
+			@include breakpoint(medium){
+				padding: 0;
+			}
+		}
+		.alternate-phone {
+			font-size: 1.4em;
+			color: $purple;
+			@include breakpoint(medium){
+				padding: 15px 0 0 10px;
+			}
+		}
+	}
+	
+
+/*********************
+POSTS & CONTENT STYLES
+*********************/
+#content {
+	max-width: 800px;
+	margin: 0 auto;
+	#inner-content {
+		padding: 1rem 0rem;
+	}
+}
+.has-sidebar #content {
+	max-width:980px;
+}
+
+.homepage-block {
+	h2 {
+		font-size: 1.4em;
+		text-align: center;
+		font-weight: 700;
+	}
+	.columns {
+	padding:0 10px;
+	text-align: center;
+	line-height: 1.6;
+	.fa {
+		color: #CCC;
+	}
+	h3 {
+		font-size: 1.4em;
+		font-weight: 700;
+		color: $purple;
+	}
+}
+}
+
+
+.single-title,
+.page-title {
+	
+}
+
+.single-title {
+	
+}
+
+.page-title {
+	
+	// Remove Foundation vcard styling from author page titles
+	.vcard {
+		border: 0px;
+		padding: 0px;
+	}
+}
+
+.archive-title {
+
+}
+
+// Post meta  
+.byline {
+	color: #999;
+	time {}
+}
+
+// Entry content  
+.entry-content {
+	
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+
+	.alignleft, img.alignleft { 
+		margin-right: 1.5em; 
+		display: inline; 
+		float: left; 
+	}
+	.alignright, img.alignright { 
+		margin-left: 1.5em; 
+		display: inline; 
+		float: right; 
+	}
+	.aligncenter, img.aligncenter { 
+		margin-right: auto; 
+		margin-left: auto; 
+		display: block; 
+		clear: both; 
+	}
+			
+	video, object {
+		max-width: 100%;
+		height: auto;
+		}
+
+	pre {
+		background: #eee;
+		border: 1px solid #cecece;
+		padding: 10px;
+		}
+
+} 
+
+.wp-caption {
+	max-width: 100%;
+	background: #eee;
+	padding: 5px;
+
+	// Images inside wp-caption  
+	img {
+		max-width: 100%;
+		margin-bottom: 0;
+		width: 100%;
+	}
+
+	p.wp-caption-text {
+		font-size: 0.85em;
+		margin: 4px 0 7px;
+		text-align: center;
+	}
+} 
+
+// Add Foundation styling to password protect button
+.post-password-form input[type="submit"] {
+	@include button;
+}
+
+/*********************
+IMAGE GALLERY STYLES
+*********************/
+	.gallery {
+
+		dl {
+
+			a {}
+
+			img {}
+
+		}
+
+		dt {}
+
+		dd {}
+
+} 
+
+// Gallery caption styles
+.gallery-caption {}
+.size-full {}
+.size-large {}
+.size-medium {}
+.size-thumbnail {}
+
+/*********************
+PAGE NAVI STYLES
+*********************/
+.page-navigation {
+	margin-top: 1rem;
+}
+
+/*********************
+COMMENT STYLES
+*********************/
+#comments {
+	.commentlist {
+		margin-left: 0px;
+	}
+}
+
+#respond {
+	ul {
+		margin-left: 0px;
+	}
+}
+
+.commentlist {
+	li {
+		position: relative;
+		clear: both;
+		overflow: hidden;
+		list-style-type: none;
+		margin-bottom: 1.5em;
+		padding: 0.7335em 10px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		ul.children {
+			margin: 0;
+
+			li {}
+
+			.comment {}
+			.alt {}
+			.odd {}
+			.even {}
+			.depth-1 {}           // Change number for different depth  
+			.byuser {}
+			.bypostauthor {}
+			.comment-author-admin {}
+
+		}
+	}
+
+	li[class*=depth-] {
+		margin-top: 1.1em;
+	}
+
+	li.depth-1 {
+		margin-left: 0;
+		margin-top: 0;
+	}
+
+	li:not(.depth-1) {
+		margin-left: 10px;
+		margin-top: 0;
+		padding-bottom: 0;
+	}
+
+	li.depth-2 {}
+	li.depth-3 {
+	}
+	li.depth-4 {}
+	li.depth-5 {}
+
+	// General comment classes  
+	.alt {}
+	.odd {
+	}
+	.even {
+	}
+	.parent {}
+	.comment {}
+	.children {}
+	.pingback {}
+	.bypostauthor {}
+	.comment-author {}
+	.comment-author-admin {}
+	.thread-alt {}
+	.thread-odd {}
+	.thread-even {}
+
+	// vcard  
+	.vcard {
+		margin-left: 50px;
+
+		cite.fn {
+			font-weight: 700;
+			font-style: normal;
+
+			a.url {}
+
+		}
+
+		time {
+			float: right;
+
+			a {
+				color: #999;
+				text-decoration: none;
+
+				&:hover {
+					text-decoration: underline;
+				}
+
+			}
+
+		}
+
+		img.photo {}
+
+		img.avatar {
+			position: absolute;
+			left: 10px;
+			padding: 2px;
+			border: 1px solid #cecece;
+			background: #fff;
+		}
+
+	} // end .commentlist .vcard  
+
+
+	// comment meta  
+	.comment-meta {
+
+		a {}
+
+	}
+
+	.commentmetadata {
+
+		a {}
+
+	}
+
+	// comment content  
+	.comment_content {
+
+		p {
+			margin: 0.7335em 0 1.5em;
+			font-size: 1em;
+			line-height: 1.5em;
+		}
+
+	} // end .commentlist .comment_content  
+
+	// comment reply link  
+	.comment-reply-link {
+		float: right;
+
+		&:hover,
+		&:focus {
+		
+		}
+
+	} // end .commentlist .comment-reply-link  
+
+} // end .commentlist  
+
+/*********************
+COMMENT FORM STYLES
+*********************/
+.respond-form {
+	margin: 1.5em 10px;
+	padding-bottom: 2.2em;
+
+	form {
+		margin: 0.75em 0;
+
+		li {
+			list-style-type: none;
+			clear: both;
+			margin-bottom: 0.7335em;
+
+			label,
+			small {
+				display: none;
+			}
+		}
+
+		input[type=text],
+		input[type=email],
+		input[type=url],
+		textarea {
+			padding: 3px 6px;
+			background: #efefef;
+			border: 2px solid #cecece;
+			line-height: 1.5em;
+
+			&:focus {
+				background: #fff;
+			}
+
+			// form validation  
+			&:invalid {
+				outline: none;
+				border-color: #fbc2c4;
+				background-color: #f6e7eb;
+				-webkit-box-shadow: none;
+				   -moz-box-shadow: none;
+				    -ms-box-shadow: none;
+						box-shadow: none;
+			}
+		}
+
+		input[type=text],
+		input[type=email],
+		input[type=url] {
+			max-width: 400px;
+			min-width: 250px;
+		}
+
+		textarea {
+			resize: none;
+			width: 97.3%;
+			height: 150px;
+		}
+
+	}
+}
+
+// comment submit button  
+#submit {}
+
+// comment form title  
+#comment-form-title {
+	margin: 0 0 1.1em;
+}
+
+// cancel comment reply link  
+#cancel-comment-reply {
+	a {}
+}
+
+// logged in comments  
+.comments-logged-in-as {}
+
+// allowed tags  
+#allowed_tags {
+	margin: 1.5em 10px 0.7335em 0;
+}
+
+// No comments  
+.nocomments {
+	margin: 0 20px 1.1em;
+}
+
+/*********************
+SIDEBARS & ASIDES
+*********************/
+
+@include breakpoint(medium){
+	.sidebar {
+		width:28%;
+		float:right;
+		margin-bottom:1rem;
+		.widget_title {
+			color: $dark-gray;
+			font-family: 'proxima-nova-condensed', arial, sans-serif;
+			font-size:0.9rem;
+			font-weight:400;
+			text-transform: uppercase;
+			border-bottom:1px solid $light-gray;
+			line-height:1.4;
+		}
+	}
+	.has-sidebar #main {
+		width:70%;
+		float:left;
+	}
+}
+#main + .sidebar {
+	margin-top:230px;
+}
+.has-sidebar-with-h2 #main + .sidebar {
+	margin-top:280px;
+}
+
+
+
+
+#searchsubmit {
+}
+
+.widgettitle {
+}
+
+.widget {
+	ul {
+		margin: 0;
+
+		li {
+			list-style: none;
+
+			&:first-child {}
+
+			&:last-child {}
+
+			a {}
+
+			// deep nesting  
+			ul {}
+
+		}
+	}
+}
+
+
+	
+/*********************
+FOUNDATION STYLES
+*********************/
+
+/*********************
+PLUGIN STYLES
+*********************/
+// Makes Gravity Forms play nice with Foundation Form styles
+.gform_body ul {
+    list-style: none outside none;
+    margin: 0;
+}
