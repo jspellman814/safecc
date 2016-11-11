@@ -115,7 +115,7 @@ HEADER STYLES
 
 
 
-    
+
 /*********************
 NAVIGATION STYLES
 *********************/
@@ -174,7 +174,7 @@ NAVIGATION STYLES
 		li:last-child a {
 			border-right:none;
 		}
-		
+
 	}
 }
 .dropdown.menu.medium-horizontal > li.is-dropdown-submenu-parent > a {
@@ -395,7 +395,7 @@ UNDERNAVIGATION STYLES
 .kicker {
 	border-top: solid 1px $light-gray;
 	margin:4em auto 3em;
-	display: block;	
+	display: block;
 	clear:both;
 	.kicker-type {
 		border: solid 1px $light-gray;
@@ -436,47 +436,49 @@ HERO STYLES
 	position: relative;
 	overflow: hidden;
 	img {
-		position:absolute;
-		height:600px;
-		width:auto !important;
-		max-width:none;
-		z-index: 1;
-		right:-50%;
-		@include breakpoint(medium){
-			height:auto;
-			width:auto;
-			right:auto;
-			max-width:100%;
-			position: relative;
-		}
+      @include breakpoint(medium){
+          height:auto;
+          width:auto;
+          max-width:100%;
+          position: relative;
+      }
 	}
 	.quote {
 		width: 100%;
-		width:100%;
-		padding-top:20px;
-		padding-bottom:20px;
+        padding: 20px 20px 0;
 		position: relative;
 		z-index: 5;
 		@include breakpoint(medium){
+            color: #FFF;
+            text-shadow: 2px 2px 3px $black;
 			position:absolute;
-			width:80%;
-			bottom: 10%;
-			padding-top:0;
-			padding-bottom:0;
+			width:82%;
+			bottom: 0;
+            padding-top: 0;
+            padding-bottom: 1%;
+            padding-right: 0;
 		}
 		@include breakpoint(large){
+			bottom: 10%;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-right: 0;
 			width: 40%;
 		}
+        color: #6c58a8;
 		font-family: 'proxima-nova-condensed', arial, sans-serif;
-		color: #FFF;
-		text-shadow: 2px 2px 3px $black;
-		padding-left: 20px ;
 		blockquote, blockquote p {
-			font-size: 1.5em;
+			font-size: 1.45em;
 			line-height: 1.2;
-			color: $white;
+            color: #6c58a8;
 			border: none;
 			padding: 0;
+          @include breakpoint(medium){
+            color: $white;
+          }
+          @include breakpoint(large){
+            font-size: 1.5em;
+          }
 		}
 	}
 }
@@ -524,7 +526,7 @@ CRISIS BOX
 			}
 		}
 	}
-	
+
 
 /*********************
 POSTS & CONTENT STYLES
@@ -564,15 +566,15 @@ POSTS & CONTENT STYLES
 
 .single-title,
 .page-title {
-	
+
 }
 
 .single-title {
-	
+
 }
 
 .page-title {
-	
+
 	// Remove Foundation vcard styling from author page titles
 	.vcard {
 		border: 0px;
@@ -592,29 +594,29 @@ POSTS & CONTENT STYLES
 
 // Entry content  
 .entry-content {
-	
+
 	img {
 		max-width: 100%;
 		height: auto;
 	}
 
-	.alignleft, img.alignleft { 
-		margin-right: 1.5em; 
-		display: inline; 
-		float: left; 
+	.alignleft, img.alignleft {
+		margin-right: 1.5em;
+		display: inline;
+		float: left;
 	}
-	.alignright, img.alignright { 
-		margin-left: 1.5em; 
-		display: inline; 
-		float: right; 
+	.alignright, img.alignright {
+		margin-left: 1.5em;
+		display: inline;
+		float: right;
 	}
-	.aligncenter, img.aligncenter { 
-		margin-right: auto; 
-		margin-left: auto; 
-		display: block; 
-		clear: both; 
+	.aligncenter, img.aligncenter {
+		margin-right: auto;
+		margin-left: auto;
+		display: block;
+		clear: both;
 	}
-			
+
 	video, object {
 		max-width: 100%;
 		height: auto;
@@ -626,14 +628,14 @@ POSTS & CONTENT STYLES
 		padding: 10px;
 		}
 
-} 
+}
 
 .wp-caption {
 	max-width: 100%;
 	background: #eee;
 	padding: 5px;
 
-	// Images inside wp-caption  
+	// Images inside wp-caption
 	img {
 		max-width: 100%;
 		margin-bottom: 0;
@@ -645,7 +647,7 @@ POSTS & CONTENT STYLES
 		margin: 4px 0 7px;
 		text-align: center;
 	}
-} 
+}
 
 // Add Foundation styling to password protect button
 .post-password-form input[type="submit"] {
@@ -669,7 +671,7 @@ IMAGE GALLERY STYLES
 
 		dd {}
 
-} 
+}
 
 // Gallery caption styles
 .gallery-caption {}
@@ -722,7 +724,7 @@ COMMENT STYLES
 			.alt {}
 			.odd {}
 			.even {}
-			.depth-1 {}           // Change number for different depth  
+			.depth-1 {}           // Change number for different depth
 			.byuser {}
 			.bypostauthor {}
 			.comment-author-admin {}
@@ -751,7 +753,7 @@ COMMENT STYLES
 	li.depth-4 {}
 	li.depth-5 {}
 
-	// General comment classes  
+	// General comment classes
 	.alt {}
 	.odd {
 	}
@@ -768,7 +770,7 @@ COMMENT STYLES
 	.thread-odd {}
 	.thread-even {}
 
-	// vcard  
+	// vcard
 	.vcard {
 		margin-left: 50px;
 
@@ -805,10 +807,10 @@ COMMENT STYLES
 			background: #fff;
 		}
 
-	} // end .commentlist .vcard  
+	} // end .commentlist .vcard
 
 
-	// comment meta  
+	// comment meta
 	.comment-meta {
 
 		a {}
@@ -821,7 +823,7 @@ COMMENT STYLES
 
 	}
 
-	// comment content  
+	// comment content
 	.comment_content {
 
 		p {
@@ -830,20 +832,20 @@ COMMENT STYLES
 			line-height: 1.5em;
 		}
 
-	} // end .commentlist .comment_content  
+	} // end .commentlist .comment_content
 
-	// comment reply link  
+	// comment reply link
 	.comment-reply-link {
 		float: right;
 
 		&:hover,
 		&:focus {
-		
+
 		}
 
-	} // end .commentlist .comment-reply-link  
+	} // end .commentlist .comment-reply-link
 
-} // end .commentlist  
+} // end .commentlist
 
 /*********************
 COMMENT FORM STYLES
@@ -879,7 +881,7 @@ COMMENT FORM STYLES
 				background: #fff;
 			}
 
-			// form validation  
+			// form validation
 			&:invalid {
 				outline: none;
 				border-color: #fbc2c4;
@@ -986,7 +988,7 @@ SIDEBARS & ASIDES
 
 			a {}
 
-			// deep nesting  
+			// deep nesting
 			ul {}
 
 		}
@@ -994,7 +996,7 @@ SIDEBARS & ASIDES
 }
 
 
-	
+
 /*********************
 FOUNDATION STYLES
 *********************/

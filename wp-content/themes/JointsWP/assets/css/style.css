@@ -4227,47 +4227,48 @@ HERO STYLES
   clear: both;
   position: relative;
   overflow: hidden; }
-  #hero img {
-    position: absolute;
-    height: 600px;
-    width: auto !important;
-    max-width: none;
-    z-index: 1;
-    right: -50%; }
-    @media screen and (min-width: 40em) {
-      #hero img {
-        height: auto;
-        width: auto;
-        right: auto;
-        max-width: 100%;
-        position: relative; } }
+  @media screen and (min-width: 40em) {
+    #hero img {
+      height: auto;
+      width: auto;
+      max-width: 100%;
+      position: relative; } }
   #hero .quote {
     width: 100%;
-    width: 100%;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 20px 20px 0;
     position: relative;
     z-index: 5;
-    font-family: 'proxima-nova-condensed', arial, sans-serif;
-    color: #FFF;
-    text-shadow: 2px 2px 3px #0a0a0a;
-    padding-left: 20px; }
+    color: #6c58a8;
+    font-family: 'proxima-nova-condensed', arial, sans-serif; }
     @media screen and (min-width: 40em) {
       #hero .quote {
+        color: #FFF;
+        text-shadow: 2px 2px 3px #0a0a0a;
         position: absolute;
-        width: 80%;
-        bottom: 10%;
+        width: 82%;
+        bottom: 0;
         padding-top: 0;
-        padding-bottom: 0; } }
+        padding-bottom: 1%;
+        padding-right: 0; } }
     @media screen and (min-width: 64em) {
       #hero .quote {
+        bottom: 10%;
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-right: 0;
         width: 40%; } }
     #hero .quote blockquote, #hero .quote blockquote p {
-      font-size: 1.5em;
+      font-size: 1.45em;
       line-height: 1.2;
-      color: #fefefe;
+      color: #6c58a8;
       border: none;
       padding: 0; }
+      @media screen and (min-width: 40em) {
+        #hero .quote blockquote, #hero .quote blockquote p {
+          color: #fefefe; } }
+      @media screen and (min-width: 64em) {
+        #hero .quote blockquote, #hero .quote blockquote p {
+          font-size: 1.5em; } }
 
 /*********************
 CRISIS BOX
