@@ -1913,14 +1913,6 @@ textarea {
   textarea[rows] {
     height: auto; }
 
-input::-webkit-input-placeholder,
-textarea::-webkit-input-placeholder {
-  color: #cacaca; }
-
-input::-moz-placeholder,
-textarea::-moz-placeholder {
-  color: #cacaca; }
-
 input:-ms-input-placeholder,
 textarea:-ms-input-placeholder {
   color: #cacaca; }
@@ -3921,6 +3913,26 @@ h1, .h1 {
   margin-bottom: 1em;
   color: #6c58a8; }
 
+a.get-help {
+  color: #00bccf;
+  font-size: 22px; }
+  a.get-help:after {
+    color: #00bccf;
+    content: '›';
+    font-weight: bold;
+    font-size: .8em;
+    margin-left: 5px;
+    margin-top: -3px;
+    right: 14px; }
+
+.button-donate {
+  background: #f7c557;
+  border-radius: 16px;
+  font-family: 'proxima-nova-condensed', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 10px 30px; }
+
 #content blockquote {
   color: #6c58a8;
   font-size: 1.4rem;
@@ -4109,7 +4121,7 @@ UNDERNAVIGATION STYLES
   margin-top: 75px;
   clear: both;
   position: relative;
-  padding: 35px 0 0 0; }
+  padding: 25px 0 0 0; }
   @media screen and (min-width: 40em) {
     .undernav {
       margin-top: 150px; } }
@@ -4133,6 +4145,8 @@ UNDERNAVIGATION STYLES
     font-size: 1.2em;
     width: 225px;
     float: left; }
+    .undernav .crisis-line > p {
+      margin-bottom: 0; }
     .undernav .crisis-line span {
       font-size: 1.2em;
       display: block;
@@ -4147,7 +4161,9 @@ UNDERNAVIGATION STYLES
       .undernav .crisis-line {
         width: 225px; }
         .undernav .crisis-line span {
-          font-size: 2em; } }
+          font-size: 1.7em; } }
+  .undernav #menu-take-action-menu {
+    padding-top: 10px; }
   .undernav .take-action {
     background: #fff;
     padding: 0 0 0 0;
@@ -4171,11 +4187,13 @@ UNDERNAVIGATION STYLES
       .undernav .take-action {
         font-size: 2.22em;
         margin-bottom: 0; } }
-    .undernav .take-action li a {
-      padding: 0.7rem; }
-      @media screen and (min-width: 40em) {
-        .undernav .take-action li a {
-          padding: 0.5rem; } }
+    .undernav .take-action li {
+      position: relative; }
+      .undernav .take-action li a {
+        padding: 0.7rem; }
+        @media screen and (min-width: 40em) {
+          .undernav .take-action li a {
+            padding: 0.5rem; } }
     .undernav .take-action li,
     .undernav .take-action li a {
       display: inline;
@@ -4184,8 +4202,24 @@ UNDERNAVIGATION STYLES
       color: #00bccf; }
     .undernav .take-action li.donate a {
       color: #5b80b7; }
+      @media screen and (min-width: 64em) {
+        .undernav .take-action li.donate a:before {
+          bottom: 70%;
+          content: 'Please';
+          display: inline-block;
+          font-size: 18px;
+          position: absolute;
+          width: 100%; } }
     .undernav .take-action li.volunteer a {
       color: #6c58a8; }
+      @media screen and (min-width: 64em) {
+        .undernav .take-action li.volunteer a:before {
+          bottom: 70%;
+          content: 'Become a';
+          display: inline-block;
+          font-size: 18px;
+          position: absolute;
+          width: 100%; } }
     .undernav .take-action li a:after {
       content: '›';
       font-size: .8em;
@@ -4246,7 +4280,7 @@ HERO STYLES
         text-shadow: 2px 2px 3px #0a0a0a;
         position: absolute;
         width: 82%;
-        bottom: 0;
+        bottom: 20%;
         padding-top: 0;
         padding-bottom: 1%;
         padding-right: 0; } }
@@ -4269,6 +4303,38 @@ HERO STYLES
       @media screen and (min-width: 64em) {
         #hero .quote blockquote, #hero .quote blockquote p {
           font-size: 1.5em; } }
+
+.hero-cta {
+  font-family: 'proxima-nova-condensed', arial, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  position: relative;
+  right: 0; }
+  @media screen and (min-width: 64em) {
+    .hero-cta {
+      bottom: 10%;
+      margin: 0 20px 0 0;
+      position: absolute; } }
+  .hero-cta .button-donate,
+  .hero-cta a {
+    background: #f7c557;
+    color: #0a0a0a;
+    display: block;
+    padding: 20px 20px;
+    border-radius: 0;
+    width: 100%;
+    text-align: left; }
+    @media screen and (min-width: 64em) {
+      .hero-cta .button-donate,
+      .hero-cta a {
+        border-radius: 16px; } }
+    .hero-cta .button-donate:after,
+    .hero-cta a:after {
+      content: '›';
+      color: #0a0a0a;
+      font-size: .8em;
+      font-weight: bold;
+      margin-left: 5px; }
 
 /*********************
 CRISIS BOX
@@ -4580,7 +4646,6 @@ FOOTER STYLES
 *********************/
 .footer {
   clear: both;
-  margin-top: 1em;
   background: #f5f5f5; }
   .footer .tagline {
     color: #6c58a8;
@@ -4613,12 +4678,15 @@ FOOTER STYLES
     .footer .site-info .widget .widget-title {
       font-weight: bold; }
   .footer #text-3 .textwidget a {
-    background: url("../images/fb-logo.png") center center no-repeat;
-    background-size: 100% auto;
-    display: block;
+    display: inline-block;
+    height: 30px;
+    margin-right: 5px;
     text-indent: -9999px;
-    width: 125px;
-    height: 28px; }
+    width: 35px; }
+    .footer #text-3 .textwidget a.facebook {
+      background: url("../images/svg/facebook.svg") left center no-repeat; }
+    .footer #text-3 .textwidget a.twitter {
+      background: url("../images/svg/twitter.svg") left center no-repeat; }
   .footer #text-4:before {
     content: '';
     background: url("../images/bingo-icon.png") center center no-repeat;
@@ -4637,6 +4705,104 @@ FOOTER STYLES
     max-width: 800px; }
     .footer #inner-footer .site-info h2 {
       font-size: 1rem; }
+
+.newsletter-signup {
+  background: #6c58a8;
+  color: #fff;
+  padding: 2.5rem 0;
+  text-align: center; }
+  .newsletter-signup .grid-full-contain-one-col {
+    padding-left: 4rem;
+    padding-right: 4rem; }
+    @media screen and (min-width: 64em) {
+      .newsletter-signup .grid-full-contain-one-col {
+        margin: 0 auto;
+        max-width: 1240px;
+        padding-left: 8rem;
+        padding-right: 8rem; } }
+  .newsletter-signup h2 {
+    color: #fff;
+    font-weight: 900;
+    margin-bottom: 3rem;
+    margin-top: 0; }
+    @media screen and (min-width: 64em) {
+      .newsletter-signup h2 {
+        font-size: 42px;
+        line-height: 4.2rem; } }
+  .newsletter-signup .description {
+    padding: 0 0 2rem; }
+    @media screen and (min-width: 64em) {
+      .newsletter-signup .description {
+        padding: 0 2rem; } }
+    .newsletter-signup .description > p {
+      margin-top: 0; }
+  .newsletter-signup .fields-container {
+    position: relative; }
+    @media screen and (min-width: 64em) {
+      .newsletter-signup .fields-container {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-pack: center;
+        justify-content: center;
+        margin-bottom: 0;
+        margin-top: 3rem; } }
+    .newsletter-signup .fields-container p {
+      display: inline-block;
+      margin: 0 1rem 0 0;
+      position: relative; }
+      .newsletter-signup .fields-container p:last-child {
+        display: block; }
+      @media screen and (min-width: 64em) {
+        .newsletter-signup .fields-container p {
+          display: block;
+          margin: 0 3rem 1rem 0; }
+          .newsletter-signup .fields-container p:nth-child(-n + 2) {
+            width: 40%; } }
+      .newsletter-signup .fields-container p label {
+        color: #fff;
+        /*left: 25px;
+        position: absolute;
+        top: 50%;
+        z-index: 1;*/
+        text-align: left;
+        transform: translateY(-27%); }
+      .newsletter-signup .fields-container p input {
+        background: #968cbf;
+        border: 2px solid #614f98;
+        border-radius: 3px;
+        color: #fff; }
+        .newsletter-signup .fields-container p input:focus {
+          background: #968cbf; }
+      .newsletter-signup .fields-container p input[type="text"],
+      .newsletter-signup .fields-container p input[type="email"] {
+        height: auto;
+        padding: 20px;
+        width: 100%; }
+        @media screen and (min-width: 64em) {
+          .newsletter-signup .fields-container p input[type="text"],
+          .newsletter-signup .fields-container p input[type="email"] {
+            min-width: 375px; } }
+      .newsletter-signup .fields-container p .submit,
+      .newsletter-signup .fields-container p input[type="button"],
+      .newsletter-signup .fields-container p .wpcf7-submit {
+        cursor: pointer;
+        box-sizing: border-box;
+        position: relative;
+        z-index: 1;
+        border: 7px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        display: inline-block;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #4b3d74;
+        color: #fff;
+        font-family: Lato, sans-serif;
+        line-height: 40px;
+        padding: 0 2.5rem;
+        white-space: nowrap;
+        height: 62px; }
 
 /******************************************************************
 
@@ -4694,7 +4860,6 @@ to display none.
     background: transparent !important;
     color: black !important;
     text-shadow: none !important;
-    -webkit-filter: none !important;
     filter: none !important;
     -ms-filter: none !important; }
   a, a:visited {
