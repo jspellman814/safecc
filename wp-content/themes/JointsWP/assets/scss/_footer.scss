@@ -11,7 +11,7 @@ FOOTER STYLES
 *********************/
 .footer {
   clear: both;
-  margin-top: 1em;
+  //margin-top: 1em;
   background: $ltgrey;
   .tagline {
     color: $purple;
@@ -56,13 +56,17 @@ FOOTER STYLES
   }
   #text-3 {
     .textwidget a {
-      background: url('../images/fb-logo.png') center center no-repeat;
-      -webkit-background-size: 100% auto;
-      background-size: 100% auto;
-      display: block;
+      display: inline-block;
+      height: 30px;
+      margin-right: 5px;
       text-indent: -9999px;
-      width: 125px;
-      height: 28px;
+      width: 35px;
+      &.facebook {
+        background: url('../images/svg/facebook.svg') left center no-repeat;
+      }
+      &.twitter {
+        background: url('../images/svg/twitter.svg') left center no-repeat;
+      }
     }
   }
   #text-4 {
@@ -94,5 +98,124 @@ FOOTER STYLES
         font-size:1rem;
       }
     }
+  }
+}
+
+.newsletter-signup {
+  background: #6c58a8;
+  color: #fff;
+  padding: 2.5rem 0;
+  text-align: center;
+
+  .grid-full-contain-one-col {
+    padding-left: 4rem;
+    padding-right: 4rem;
+    @include breakpoint(large) {
+      margin: 0 auto;
+      max-width: 1440 - 200px; //1340
+      padding-left: 8rem;
+      padding-right: 8rem;
+    }
+  }
+
+  h2 {
+    color: #fff;
+    font-weight: 900;
+    margin-bottom: 3rem;
+    margin-top: 0;
+    @include breakpoint(large) {
+      font-size: 42px;
+      line-height: 4.2rem;
+    }
+  }
+
+  .description {
+    padding: 0 0 2rem;
+    @include breakpoint(large) {
+      padding: 0 2rem;
+    }
+    > p {
+      margin-top: 0;
+    }
+  }
+
+  .fields-container {
+    position: relative;
+    @include breakpoint(large) {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0;
+      margin-top: 3rem;
+    }
+
+    p {
+      display: inline-block;
+      margin: 0 1rem 0 0;
+      position: relative;
+      &:last-child {
+        display: block;
+      }
+      @include breakpoint(large) {
+        display: block;
+        margin: 0 3rem 1rem 0;
+        &:nth-child(-n + 2) { //first two children
+          width: 40%;
+        }
+      }
+
+      label {
+        color: #fff;
+        /*left: 25px;
+        position: absolute;
+        top: 50%;
+        z-index: 1;*/
+        text-align: left;
+        transform: translateY(-27%);
+      }
+
+      input {
+        background: #968cbf;
+        border: 2px solid #614f98;
+        border-radius: 3px;
+        color: #fff;
+        &:focus {
+          background: #968cbf;
+        }
+      }
+
+      input[type="text"],
+      input[type="email"] {
+        height: auto;
+        padding: 20px;
+        width: 100%;
+        @include breakpoint(large) {
+          min-width: 375px;
+        }
+      }
+
+      .submit,
+      input[type="button"],
+      .wpcf7-submit {
+        cursor: pointer;
+        box-sizing: border-box;
+        position: relative;
+        z-index: 1;
+        border: 7px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        display: inline-block;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #4b3d74;
+        color: #fff;
+        font-family: Lato, sans-serif;
+        line-height: 40px;
+        padding: 0 2.5rem;
+        white-space: nowrap;
+        height: 62px;
+      }
+    }
+
   }
 }

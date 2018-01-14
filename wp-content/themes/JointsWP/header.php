@@ -63,7 +63,11 @@
 						 		<a href="<?php echo home_url(); ?>"><?php bloginfo('name'); ?></a>
 						 	</div>
 						 	<div class="crisis-line">
-							 	<p>24-Hour Help Line<span>(503) 397-6161</span></p>
+                                <p>
+                                    24-Hour Help Line
+                                    <span>(503) 397-6161</span>
+                                    <a class="get-help" href="http://safecc/get-help/" tabindex="0">Get Help</a>
+                                </p>
 						 	</div>
 						 	<div class="take-action">
 								<?php joints_take_action_nav(); ?>	

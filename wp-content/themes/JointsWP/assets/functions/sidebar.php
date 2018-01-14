@@ -40,6 +40,22 @@ function joints_register_sidebars() {
 		'before_title'  => '<h2 class="widget-title">',
 		'after_title'   => '</h2>',
 	) );
+
+	register_sidebar( array(
+		'name'          => esc_html__( 'Hero Call to Action', 'jointswp' ),
+		'id'            => 'hero-cta',
+		'description'   => esc_html__( 'Add widgets here.', 'jointswp' ),
+		'before_widget' => '<div class="hero-cta widget %2$s">',
+		'after_widget'  => '</div>',
+	) );
+
+	register_sidebar( array(
+		'name'          => esc_html__( 'Newsletter Signup Form', 'jointswp' ),
+		'id'            => 'news-signup',
+		'description'   => esc_html__( 'Add widgets here.', 'jointswp' ),
+		'before_widget' => '<div class="newsletter-signup"><div class="grid-full-contain-one-col widget %2$s">',
+		'after_widget'  => '</div></div>',
+	) );
 	/*
 	to add more sidebars or widgetized areas, just copy
 	and edit the above sidebar code. In order to call

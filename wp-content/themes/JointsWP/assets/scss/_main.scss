@@ -59,6 +59,31 @@ h5, .h5 {
 
 }
 
+a.get-help {
+	color: #00bccf;
+	font-size: 22px;
+	&:after {
+		color: #00bccf;
+		content: '›';
+		font-weight: bold;
+		font-size: .8em;
+		margin-left: 5px;
+		margin-top: -3px;
+		right: 14px;
+	}
+}
+
+.button-donate {
+	background: #f7c557;
+	-webkit-border-radius: 16px;
+	-moz-border-radius: 16px;
+	border-radius: 16px;
+	font-family: 'proxima-nova-condensed', arial, sans-serif;
+	font-size: 20px;
+	font-weight: 600;
+	padding: 10px 30px;
+}
+
 #content blockquote {
 	color:$purple;
 	font-size:1.4rem;
@@ -301,7 +326,7 @@ UNDERNAVIGATION STYLES
 	}
 	clear:both;
 	position: relative;
-	padding:35px 0 0 0;
+	padding:25px 0 0 0;
 	.safelogo a {
 		position: absolute;
 		top:23px;
@@ -320,6 +345,9 @@ UNDERNAVIGATION STYLES
 		font-size: 1.2em;
 		width: 225px;
 		float: left;
+		> p {
+			margin-bottom: 0;
+		}
 		span {
 			font-size: 1.2em;
 			display: block;
@@ -335,9 +363,12 @@ UNDERNAVIGATION STYLES
 		@include breakpoint(large){
 			width: 225px;
 			span {
-				font-size: 2em;
+				font-size: 1.7em;
 			}
 		}
+	}
+	#menu-take-action-menu {
+		padding-top: 10px;
 	}
 	.take-action {
 		background: #fff;
@@ -362,10 +393,13 @@ UNDERNAVIGATION STYLES
 			font-size: 2.22em;
 			margin-bottom:0;
 		}
-		li a {
-			padding: 0.7rem;
-			@include breakpoint(medium){
-				padding: 0.5rem;
+		li {
+			position: relative;
+			a {
+				padding: 0.7rem;
+				@include breakpoint(medium){
+					padding: 0.5rem;
+				}
 			}
 		}
 		li,
@@ -376,11 +410,33 @@ UNDERNAVIGATION STYLES
 		li.get-help a {
 			color: $teal;
 		}
-		li.donate a {
-			color: $blue;
+		li.donate {
+			a {
+				color: $blue;
+				@include breakpoint(large){
+					&:before {
+						bottom: 70%;
+						content: 'Please';
+						display: inline-block;
+						font-size: 18px;
+						position: absolute;
+						width: 100%;
+					}
+				}
+			}
 		}
 		li.volunteer a {
 			color: $purple;
+			@include breakpoint(large){
+				&:before {
+					bottom: 70%;
+					content: 'Become a';
+					display: inline-block;
+					font-size: 18px;
+					position: absolute;
+					width: 100%;
+				}
+			}
 		}
 		li a:after {
 			content: '›';
@@ -453,7 +509,7 @@ HERO STYLES
             text-shadow: 2px 2px 3px $black;
 			position:absolute;
 			width:82%;
-			bottom: 0;
+			bottom: 20%;
             padding-top: 0;
             padding-bottom: 1%;
             padding-right: 0;
@@ -479,6 +535,40 @@ HERO STYLES
           @include breakpoint(large){
             font-size: 1.5em;
           }
+		}
+	}
+}
+
+.hero-cta {
+	font-family: 'proxima-nova-condensed', arial, sans-serif;
+	font-size: 20px;
+	font-weight: 600;
+	position: relative;
+	right: 0;
+	@include breakpoint(large){
+		bottom: 10%;
+		margin: 0 20px 0 0;
+		position: absolute;
+	}
+	.button-donate,
+	a {
+		background: #f7c557;
+		color: #0a0a0a;
+		display: block;
+		padding: 20px 20px;
+
+        border-radius: 0;
+        width: 100%;
+        text-align: left;
+		@include breakpoint(large){
+			border-radius: 16px;
+		}
+		&:after {
+			content: '›';
+			color: #0a0a0a;
+			font-size: .8em;
+			font-weight: bold;
+			margin-left: 5px;
 		}
 	}
 }

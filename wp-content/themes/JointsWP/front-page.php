@@ -19,6 +19,7 @@
 					<?php if ( has_post_thumbnail() ) { the_post_thumbnail('hero2x'); } ?>
 						<div class="max-width">
 					<div class="quote"><?php the_content(); ?></div>
+							<?php if ( ! function_exists( 'dynamic_sidebar' ) || ! dynamic_sidebar( "hero-cta" ) ) : ?><?php endif; ?>
 						</div>
 			<?php
 				endwhile;
