@@ -343,8 +343,10 @@ UNDERNAVIGATION STYLES
 		margin-left: 160px;
 		color: $purple;
 		font-size: 1.2em;
-		width: 225px;
+		width: auto;
 		float: left;
+		display: flex;
+		padding-bottom: 27px;
 		> p {
 			margin-bottom: 0;
 		}
@@ -355,15 +357,22 @@ UNDERNAVIGATION STYLES
 		}
 		@include breakpoint(medium){
 			margin-left: 170px;
-			width: 175px;
+			padding-bottom: 0;
 			span {
 				font-size: 1.5em;
 			}
 		}
 		@include breakpoint(large){
-			width: 225px;
 			span {
-				font-size: 1.7em;
+				font-size: 2em;
+			}
+		}
+		a.get-help {
+			align-self: center;
+			margin-left: 1rem;
+			margin-top: 28px;
+			@include breakpoint(large) {
+				font-size: 2.22em;
 			}
 		}
 	}

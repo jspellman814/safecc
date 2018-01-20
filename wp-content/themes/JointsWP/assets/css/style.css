@@ -4143,8 +4143,11 @@ UNDERNAVIGATION STYLES
     margin-left: 160px;
     color: #6c58a8;
     font-size: 1.2em;
-    width: 225px;
-    float: left; }
+    width: auto;
+    float: left;
+    display: -ms-flexbox;
+    display: flex;
+    padding-bottom: 27px; }
     .undernav .crisis-line > p {
       margin-bottom: 0; }
     .undernav .crisis-line span {
@@ -4154,14 +4157,20 @@ UNDERNAVIGATION STYLES
     @media screen and (min-width: 40em) {
       .undernav .crisis-line {
         margin-left: 170px;
-        width: 175px; }
+        padding-bottom: 0; }
         .undernav .crisis-line span {
           font-size: 1.5em; } }
     @media screen and (min-width: 64em) {
-      .undernav .crisis-line {
-        width: 225px; }
-        .undernav .crisis-line span {
-          font-size: 1.7em; } }
+      .undernav .crisis-line span {
+        font-size: 2em; } }
+    .undernav .crisis-line a.get-help {
+      -ms-flex-item-align: center;
+      align-self: center;
+      margin-left: 1rem;
+      margin-top: 28px; }
+      @media screen and (min-width: 64em) {
+        .undernav .crisis-line a.get-help {
+          font-size: 2.22em; } }
   .undernav #menu-take-action-menu {
     padding-top: 10px; }
   .undernav .take-action {
