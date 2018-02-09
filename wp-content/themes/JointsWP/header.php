@@ -68,7 +68,7 @@
                                     24-Hour Help Line
                                     <span>(503) 397-6161</span>
                                 </p>
-                                <a class="get-help" href="http://safecc/get-help/" tabindex="0">Get Help</a>
+                                <a class="get-help" href="<?php echo home_url(); ?>/get-help/" tabindex="0">Get Help</a>
 						 	</div>
 						 	<div class="take-action">
 								<?php joints_take_action_nav(); ?>
