@@ -37,7 +37,11 @@ class CustomSidebarsReplacer extends CustomSidebars {
 			array( $this, 'register_custom_sidebars' )
 		);
 
-		
+		// Support translation via WPML plugin.
+		add_action(
+			'register_sidebar',
+			array( $this, 'translate_sidebar' )
+		);
 
 		if ( ! is_admin() ) {
 			// Frontend hooks.
@@ -58,7 +62,7 @@ class CustomSidebarsReplacer extends CustomSidebars {
 	 */
 	public function register_custom_sidebars() {
 		$sb = self::get_custom_sidebars();
-
+		$sb = CustomSidebars::sort_sidebars_by_name( $sb );
 		foreach ( $sb as $sidebar ) {
 			/**
 			 * Filter sidebar options for custom sidebars.
@@ -69,7 +73,6 @@ class CustomSidebarsReplacer extends CustomSidebars {
 			 *           the sidebar.
 			 */
 			$sidebar = apply_filters( 'cs_sidebar_params', $sidebar );
-
 			register_sidebar( $sidebar );
 		}
 	}
@@ -99,7 +102,8 @@ class CustomSidebarsReplacer extends CustomSidebars {
 			$wp_registered_sidebars,
 			$wp_registered_widgets;
 
-		$expl = CustomSidebarsExplain::do_explain();
+		$custom_sidebars_explain = CustomSidebarsExplain::instance();
+		$expl = $custom_sidebars_explain->do_explain();
 
 		$expl && do_action( 'cs_explain', '<h4>Replace sidebars</h4>', true );
 
@@ -138,7 +142,7 @@ class CustomSidebarsReplacer extends CustomSidebars {
 
 			$check = $this->is_valid_replacement( $sb_id, $replacement, $replacement_type, $extra_index );
 
-			if ( $check ) {
+			if ( $check && isset( $original_widgets[ $replacement ] ) ) {
 				$expl && do_action( 'cs_explain', 'Replacement for "' . $sb_id . '": ' . $replacement );
 
 				if ( sizeof( $original_widgets[ $replacement ] ) == 0 ) {
@@ -182,7 +186,9 @@ class CustomSidebarsReplacer extends CustomSidebars {
 		$sidebars = self::get_options( 'modifiable' );
 		$replacements_todo = sizeof( $sidebars );
 		$replacements = array();
-		$expl = CustomSidebarsExplain::do_explain();
+
+		$custom_sidebars_explain = CustomSidebarsExplain::instance();
+		$expl = $custom_sidebars_explain->do_explain();
 
 		foreach ( $sidebars as $sb ) {
 			$replacements[ $sb ] = false;
@@ -191,6 +197,7 @@ class CustomSidebarsReplacer extends CustomSidebars {
 		// 1 |== Single posts/pages --------------------------------------------
 		if ( is_single() ) {
 			$post_type = get_post_type();
+			$post_type = apply_filters( 'cs_replace_post_type', $post_type, 'single' );
 			$expl && do_action( 'cs_explain', 'Type 1: Single ' . ucfirst( $post_type ) );
 
 			if ( ! self::supported_post_type( $post_type ) ) {
@@ -272,20 +279,36 @@ class CustomSidebarsReplacer extends CustomSidebars {
 			// 2 |== Category archive ----------------------------------------------
 
 			$expl && do_action( 'cs_explain', 'Type 2: Category Archive' );
-
-			// 2.1 Start at current category and travel up all parents
+			/**
+			 * 2.1 Category archive
+			 */
+			foreach ( $sidebars as $sb_id ) {
+				if ( ! $replacements[ $sb_id ] && isset( $options['category_archive'][ $sb_id ] ) ) {
+					$replacements[ $sb_id ] = array(
+						$options['category_archive'][ $sb_id ],
+						'category_archive',
+						0,
+					);
+				}
+			}
+			/**
+			 *  2.2 Start at current category and travel up all parents
+			 */
 			$category_object = get_queried_object();
 			$current_category = $category_object->term_id;
-			while ( 0 != $current_category && $replacements_todo > 0 ) {
+
+			if ( 0 != $current_category && $replacements_todo > 0 ) {
 				foreach ( $sidebars as $sb_id ) {
-					if ( $replacements[ $sb_id ] ) { continue; }
-					if ( ! empty( $options['category_archive'][ $current_category ][ $sb_id ] ) ) {
+					if (
+						isset( $options['category_archive'] )
+						&& isset( $options['category_archive'][ $current_category ] )
+						&& isset( $options['category_archive'][ $current_category ][ $sb_id ] )
+					) {
 						$replacements[ $sb_id ] = array(
 							$options['category_archive'][ $current_category ][ $sb_id ],
 							'category_archive',
 							$current_category,
 						);
-						$replacements_todo -= 1;
 					}
 				}
 				$current_category = $category_object->category_parent;
@@ -309,11 +332,12 @@ class CustomSidebarsReplacer extends CustomSidebars {
 					);
 				}
 			}
-		} elseif ( ! is_category() && ! is_singular() && get_post_type() != 'post' ) {
+		} elseif ( ! is_tax() && ! is_404() && ! is_category() && ! is_singular() && get_post_type() != 'post' ) {
 			// 4 |== Post-Tpe Archive ----------------------------------------------
 			// `get_post_type() != 'post'` .. post-archive = post-index (see 7)
 
 			$post_type = get_post_type();
+			$post_type = apply_filters( 'cs_replace_post_type', $post_type, 'archive' );
 			$expl && do_action( 'cs_explain', 'Type 4: ' . ucfirst( $post_type ) . ' Archive' );
 
 			if ( ! self::supported_post_type( $post_type ) ) {
@@ -339,6 +363,7 @@ class CustomSidebarsReplacer extends CustomSidebars {
 			// `! is_front_page()` .. in case the site uses static front page.
 
 			$post_type = get_post_type();
+			$post_type = apply_filters( 'cs_replace_post_type', $post_type, 'page' );
 			$expl && do_action( 'cs_explain', 'Type 5: ' . ucfirst( $post_type ) );
 
 			if ( ! self::supported_post_type( $post_type ) ) {
@@ -360,22 +385,28 @@ class CustomSidebarsReplacer extends CustomSidebars {
 			}
 
 			// 5.2 Try to use the parents metadata.
-			if ( $post->post_parent != 0 && $replacements_todo > 0 ) {
-				$reps = self::get_post_meta( $post->post_parent );
-				foreach ( $sidebars as $sb_id ) {
-					if ( $replacements[ $sb_id ] ) { continue; }
-					if ( is_array( $reps )
-						&& ! empty( $reps[ $sb_id ] )
-					) {
-						$replacements[ $sb_id ] = array(
-							$reps[ $sb_id ],
-							'particular',
-							-1,
-						);
-						$replacements_todo -= 1;
+			$post_orginal = $post;
+			while ( $replacements_todo > 0 && $post->post_parent > 0 ) {
+				if ( $replacements_todo > 0 ) {
+					$reps = self::get_post_meta( $post->post_parent );
+					foreach ( $sidebars as $sb_id ) {
+						if ( $replacements[ $sb_id ] ) {
+							continue;
+						}
+						if ( is_array( $reps )
+							&& ! empty( $reps[ $sb_id ] )
+						) {
+							$replacements[ $sb_id ] = array(
+								$reps[ $sb_id ],
+								'particular',
+								-1,
+							);
+						}
 					}
+					$post = get_post( $post->post_parent );
 				}
 			}
+			$post = $post_orginal;
 
 			// 5.3 Look for post-type level replacements.
 			if ( $replacements_todo > 0 ) {
@@ -476,7 +507,6 @@ class CustomSidebarsReplacer extends CustomSidebars {
 			// 8 |== Tag archive ---------------------------------------------------
 
 			$expl && do_action( 'cs_explain', 'Type 8: Tag Archive' );
-
 			foreach ( $sidebars as $sb_id ) {
 				if ( ! empty( $options['tags'][ $sb_id ] ) ) {
 					$replacements[ $sb_id ] = array(
@@ -493,7 +523,17 @@ class CustomSidebarsReplacer extends CustomSidebars {
 			$current_author = $author_object->ID;
 			$expl && do_action( 'cs_explain', 'Type 9: Author Archive (' . $current_author . ')' );
 
-			
+			// 9.1 First check for specific authors.
+			foreach ( $sidebars as $sb_id ) {
+				if ( ! empty( $options['author_archive'][ $current_author ][ $sb_id ] ) ) {
+					$replacements[ $sb_id ] = array(
+						$options['author_archive'][ $current_author ][ $sb_id ],
+						'author_archive',
+						$current_author,
+					);
+					$replacements_todo -= 1;
+				}
+			}
 
 			// 9.2 Then check if there is an "Any authors" sidebar
 			if ( $replacements_todo > 0 ) {
@@ -524,7 +564,6 @@ class CustomSidebarsReplacer extends CustomSidebars {
 			}
 		} elseif ( is_404() ) {
 			// 11 |== 404 not found ------------------------------------------------
-
 			$expl && do_action( 'cs_explain', 'Type 11: 404 not found' );
 
 			foreach ( $sidebars as $sb_id ) {
@@ -532,6 +571,25 @@ class CustomSidebarsReplacer extends CustomSidebars {
 					$replacements[ $sb_id ] = array(
 						$options['404'][ $sb_id ],
 						'404',
+						-1,
+					);
+				}
+			}
+		} elseif ( is_tax() ) {
+			// 12 |== Taxonomy Archive ----------------------------------------------
+			$current_term = get_queried_object();
+			$taxonomy = $current_term->taxonomy;
+			$taxonomy = apply_filters( 'cs_replace_taxonomy', $taxonomy, 'archive' );
+			$expl && do_action( 'cs_explain', 'Type 12: ' . ucfirst( $taxonomy ) . ' Archive' );
+			foreach ( $sidebars as $sb_id ) {
+				if (
+				   isset( $options['taxonomies_archive'] )
+				   && isset( $options['taxonomies_archive'][ $taxonomy ] )
+				   && isset( $options['taxonomies_archive'][ $taxonomy ][ $sb_id ] )
+				) {
+					$replacements[ $sb_id ] = array(
+						$options['taxonomies_archive'][ $taxonomy ][ $sb_id ],
+						'taxonomies_archive',
 						-1,
 					);
 				}
@@ -549,8 +607,6 @@ class CustomSidebarsReplacer extends CustomSidebars {
 
 		return $replacements;
 	}
-
-
 
 	/**
 	 * Makes sure that the replacement sidebar exists.
@@ -657,5 +713,22 @@ class CustomSidebarsReplacer extends CustomSidebars {
 		return $sidebar;
 	}
 
-	
+	/**
+	 * Translates a sidebar using WPML right after it was registered.
+	 *
+	 * @since  2.0.9.7
+	 * @param  array $sidebar The sidebar that was registered
+	 */
+	public function translate_sidebar( $sidebar ) {
+		if ( ! function_exists( 'icl_t' ) ) { return false; }
+
+		global $wp_registered_sidebars;
+		$context = 'Sidebar';
+
+		// Translate the name and description.
+		$sidebar['name'] = icl_t( $context, $sidebar['id'] . '-name', $sidebar['name'] );
+		$sidebar['description'] = icl_t( $context, $sidebar['id'] . '-description', $sidebar['description'] );
+
+		$wp_registered_sidebars[ $sidebar['id'] ] = $sidebar;
+	}
 };

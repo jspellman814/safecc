@@ -3,7 +3,7 @@
  * Plugin Name: Custom Sidebars
  * Plugin URI:  https://wordpress.org/plugins/custom-sidebars/
  * Description: Allows you to create widgetized areas and custom sidebars. Replace whole sidebars or single widgets for specific posts and pages.
- * Version:     2.1.1.0
+ * Version:     3.1.1
  * Author:      WPMU DEV
  * Author URI:  http://premium.wpmudev.org/
  * Textdomain:  custom-sidebars
@@ -47,14 +47,16 @@ function inc_sidebars_init() {
 	define( 'CSB_LANG_DIR', $plugin_dir_rel . '/lang/' );
 	define( 'CSB_VIEWS_DIR', $plugin_dir . '/views/' );
 	define( 'CSB_INC_DIR', $plugin_dir . '/inc/' );
-	define( 'CSB_JS_URL', $plugin_url . 'js/' );
-	define( 'CSB_CSS_URL', $plugin_url . 'css/' );
-	define( 'CSB_IMG_URL', $plugin_url . 'img/' );
+	define( 'CSB_JS_URL', $plugin_url . 'assets/js/' );
+	define( 'CSB_CSS_URL', $plugin_url . 'assets/css/' );
+	define( 'CSB_IMG_URL', $plugin_url . 'assets/img/' );
 
 	// Include function library.
 	$modules[] = CSB_INC_DIR . 'external/wpmu-lib/core.php';
-	$modules[] = CSB_INC_DIR . 'external/wdev-frash/module.php';
 	$modules[] = CSB_INC_DIR . 'class-custom-sidebars.php';
+	
+	$modules[] = CSB_INC_DIR . 'external/wdev-frash/module.php';
+	
 
 	
 	// Free-version configuration - no drip campaign yet...

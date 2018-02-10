@@ -69,7 +69,7 @@ function _show_replaceable( $sidebar, $prefix, $cat_name, $class = '' ) {
 			<span class="sb-name">...</span>
 		</h3>
 	</div>
-	<p>
+	<p class="message unique-post">
 		<i class="dashicons dashicons-info light"></i>
 		<?php
 		printf(
@@ -84,6 +84,9 @@ function _show_replaceable( $sidebar, $prefix, $cat_name, $class = '' ) {
 		?>
 	</p>
 
+<div class="hidden">
+	<p class="message no-sidebars"><?php _e( 'There are no replaceable sidebars. Please allow at least one as replaceable.', 'custom-sidebars' ); ?></p>
+</div>
 	<?php
 	/**
 	 * =========================================================================
@@ -185,5 +188,6 @@ function _show_replaceable( $sidebar, $prefix, $cat_name, $class = '' ) {
 	<div class="buttons">
 		<button type="button" class="button-link btn-cancel"><?php _e( 'Cancel', 'custom-sidebars' ); ?></button>
 		<button type="button" class="button-primary btn-save"><?php _e( 'Save Changes', 'custom-sidebars' ); ?></button>
-	</div>
+    </div>
+    <?php wp_nonce_field( 'custom-sidebars-set-location' ); ?>
 </form>

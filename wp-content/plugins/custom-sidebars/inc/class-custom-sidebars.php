@@ -4,8 +4,12 @@
 require_once CSB_INC_DIR . 'class-custom-sidebars-widgets.php';
 require_once CSB_INC_DIR . 'class-custom-sidebars-editor.php';
 require_once CSB_INC_DIR . 'class-custom-sidebars-replacer.php';
-
+require_once CSB_INC_DIR . 'class-custom-sidebars-cloning.php';
+require_once CSB_INC_DIR . 'class-custom-sidebars-visibility.php';
+require_once CSB_INC_DIR . 'class-custom-sidebars-export.php';
 require_once CSB_INC_DIR . 'class-custom-sidebars-explain.php';
+
+require_once CSB_INC_DIR . 'class-custom-sidebars-checkup-notification.php';
 
 
 /**
@@ -31,7 +35,7 @@ class CustomSidebars {
 	 * URL to the documentation/info page of the pro plugin
 	 * @var  string
 	 */
-	static public $pro_url = 'http://premium.wpmudev.org/project/custom-sidebars-pro/';
+	static public $pro_url = 'https://premium.wpmudev.org/project/custom-sidebars-pro/';
 
 	/**
 	 * Flag that specifies if the page is loaded in accessibility mode.
@@ -40,7 +44,6 @@ class CustomSidebars {
 	 * @since 2.0.9
 	 */
 	static protected $accessibility_mode = false;
-
 
 	/**
 	 * Returns the singleton instance of the custom sidebars class.
@@ -69,9 +72,20 @@ class CustomSidebars {
 	 * We directly initialize sidebar options when class is created.
 	 */
 	private function __construct() {
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		// Extensions use this hook to initialize themselfs.
+		do_action( 'cs_init' );
+	}
+
+	/**
+	 * Admin init
+	 *
+	 * @since 3.0.5
+	 */
+	public function admin_init() {
+
 		$plugin_title = 'Custom Sidebars';
 		
-
 		/**
 		 * ID of the WP-Pointer used to introduce the plugin upon activation
 		 *
@@ -82,18 +96,28 @@ class CustomSidebars {
 		 *  Description:  Create and edit custom sidebars in your widget screen!
 		 * -------------------------------------------------------------------------
 		 */
-		lib3()->html->pointer(
-			'wpmudcs1',                               // Internal Pointer-ID
-			'#menu-appearance',                       // Point at
-			$plugin_title,
-			sprintf(
-				__(
-					'Now you can create and edit custom sidebars in your ' .
-					'<a href="%1$s">Widgets screen</a>!', 'custom-sidebars'
-				),
-				admin_url( 'widgets.php' )
-			)                                         // Body
-		);
+
+		$user_id = get_current_user_id();
+		$dismissed_wp_pointers = get_user_meta( $user_id, 'dismissed_wp_pointers', true );
+		$dismissed_wp_pointers = explode( ',', $dismissed_wp_pointers );
+
+		if ( in_array( 'wpmudcs1', $dismissed_wp_pointers ) || wp_is_mobile() ) {
+			lib3()->ui->add( 'core', 'widgets.php' );
+		} else {
+			lib3()->ui->add( 'core' );
+			lib3()->html->pointer(
+				'wpmudcs1',							   // Internal Pointer-ID
+				'#menu-appearance',					   // Point at
+				$plugin_title,
+				sprintf(
+					__(
+						'Now you can create and edit custom sidebars in your ' .
+						'<a href="%1$s">Widgets screen</a>!', 'custom-sidebars'
+					),
+					admin_url( 'widgets.php' )
+				)										 // Body
+			);
+		}
 
 		// Find out if the page is loaded in accessibility mode.
 		$flag = isset( $_GET['widgets-access'] ) ? $_GET['widgets-access'] : get_user_setting( 'widgets_access' );
@@ -101,6 +125,7 @@ class CustomSidebars {
 
 		// We don't support accessibility mode. Display a note to the user.
 		if ( true === self::$accessibility_mode ) {
+			$nonce = wp_create_nonce( 'widgets-access' );
 			lib3()->ui->admin_message(
 				sprintf(
 					__(
@@ -110,24 +135,27 @@ class CustomSidebars {
 						'custom-sidebars'
 					),
 					$plugin_title,
-					admin_url( 'widgets.php?widgets-access=off' )
+					admin_url( 'widgets.php?widgets-access=off&_wpnonce='.urlencode( $nonce ) )
 				),
 				'err',
 				'widgets'
 			);
 		} else {
+			/**
+			 * Main JavaScript file
+			 */
+			$javascript_file = 'cs.min.js';
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				$javascript_file = 'cs.js';
+			}
 			// Load javascripts/css files
-			lib3()->ui->add( 'core', 'widgets.php' );
 			lib3()->ui->add( 'select', 'widgets.php' );
-			lib3()->ui->add( CSB_JS_URL . 'cs.min.js', 'widgets.php' );
+			lib3()->ui->add( CSB_JS_URL . $javascript_file, 'widgets.php' );
 			lib3()->ui->add( CSB_CSS_URL . 'cs.css', 'widgets.php' );
 			lib3()->ui->add( CSB_CSS_URL . 'cs.css', 'edit.php' );
 
 			// AJAX actions
 			add_action( 'wp_ajax_cs-ajax', array( $this, 'ajax_handler' ) );
-
-			// Extensions use this hook to initialize themselfs.
-			do_action( 'cs_init' );
 
 			// Display a message after import.
 			if ( ! empty( $_GET['cs-msg'] ) ) {
@@ -147,15 +175,15 @@ class CustomSidebars {
 					lib3()->ui->admin_message( $msg );
 				}
 			}
-
-			add_action(
-				'in_widget_form',
-				array( $this, 'in_widget_form' ),
-				10, 1
-			);
 		}
-	}
 
+		/**
+		* add links on plugin page.
+		*/
+		add_filter( 'plugin_action_links_' . plugin_basename( CSB_PLUGIN ), array( $this, 'add_action_links' ), 10, 4 );
+
+		add_action( 'admin_footer', array( $this, 'print_templates' ) );
+	}
 
 
 	// =========================================================================
@@ -276,7 +304,7 @@ class CustomSidebars {
 			}
 
 			// List of modifiable sidebars.
-			if ( ! is_array( @$Options['modifiable'] ) ) {
+			if ( ! isset( $Options['modifiable'] ) || ! is_array( $Options['modifiable'] ) ) {
 				// By default we make ALL theme sidebars replaceable:
 				$all = self::get_sidebars( 'theme' );
 				$Options['modifiable'] = array_keys( $all );
@@ -304,7 +332,7 @@ class CustomSidebars {
 				'post_type_pages',
 				'post_type_single',
 				'search',
-				'tags'
+				'tags',
 			);
 
 			foreach ( $keys as $k ) {
@@ -316,20 +344,20 @@ class CustomSidebars {
 
 			// Single/Archive pages - new names
 			$Options['post_type_single'] = self::get_array(
-				@$Options['post_type_single'], // new name
-				@$Options['defaults']          // old name
+				$Options['post_type_single'], // new name
+				$Options['defaults']          // old name
 			);
 			$Options['post_type_archive'] = self::get_array(
-				@$Options['post_type_archive'], // new name
-				@$Options['post_type_pages']    // old name
+				$Options['post_type_archive'], // new name
+				$Options['post_type_pages']    // old name
 			);
 			$Options['category_single'] = self::get_array(
-				@$Options['category_single'], // new name
-				@$Options['category_posts']   // old name
+				$Options['category_single'], // new name
+				$Options['category_posts']   // old name
 			);
 			$Options['category_archive'] = self::get_array(
-				@$Options['category_archive'], // new name
-				@$Options['category_pages']    // old name
+				$Options['category_archive'], // new name
+				$Options['category_pages']    // old name
 			);
 
 			// Remove old item names from the array.
@@ -351,21 +379,22 @@ class CustomSidebars {
 			}
 
 			// Special archive pages
-			$Options['blog'] = self::get_array( @$Options['blog'] );
-			$Options['tags'] = self::get_array( @$Options['tags'] );
-			$Options['authors'] = self::get_array( @$Options['authors'] );
-			$Options['search'] = self::get_array( @$Options['search'] );
-			$Options['date'] = self::get_array( @$Options['date'] );
+			$keys = array( 'blog', 'tags', 'authors', 'search', 'date' );
+			foreach ( $keys as $temporary_key ) {
+				if ( isset( $Options[ $temporary_key ] ) ) {
+					$Options[ $temporary_key ] = self::get_array( $Options[ $temporary_key ] );
+				} else {
+					$Options[ $temporary_key ] = array();
+				}
+			}
 
 			$Options = self::validate_options( $Options );
-
 			if ( $need_update ) {
 				self::set_options( $Options );
 			}
 		}
-
 		if ( ! empty( $key ) ) {
-			return @$Options[ $key ];
+			return isset( $Options[ $key ] )? $Options[ $key ] : null;
 		} else {
 			return $Options;
 		}
@@ -400,12 +429,13 @@ class CustomSidebars {
 			return array();
 		}
 		$valid = array_keys( self::get_sidebars( 'theme' ) );
-		$current = self::get_array( @$data['modifiable'] );
-
+		$current = array();
+		if ( isset( $data['modifiable'] ) ) {
+			$current = self::get_array( $data['modifiable'] );
+		}
 		// Get all the sidebars that are modifiable AND exist.
 		$modifiable = array_intersect( $valid, $current );
 		$data['modifiable'] = $modifiable;
-
 		return $data;
 	}
 
@@ -539,7 +569,7 @@ class CustomSidebars {
 	 */
 	static public function get_sidebars( $type = 'theme' ) {
 		global $wp_registered_sidebars;
-		$allsidebars = $wp_registered_sidebars;
+		$allsidebars = CustomSidebars::sort_sidebars_by_name( $wp_registered_sidebars );
 		$result = array();
 
 		// Remove inactive sidebars.
@@ -621,7 +651,7 @@ class CustomSidebars {
 				array( 'public' => false ),
 				'names'
 			);
-			$Ignored_types[] = 'attachment';
+			$Ignored_types['attachment'] = 'attachment';
 		}
 
 		if ( is_object( $posttype ) ) {
@@ -643,7 +673,6 @@ class CustomSidebars {
 			$response = apply_filters( 'cs_support_posttype', $response, $posttype );
 			$Response[ $posttype ] = $response;
 		}
-
 		return $Response[ $posttype ];
 	}
 
@@ -656,22 +685,43 @@ class CustomSidebars {
 	 */
 	static public function get_post_types( $type = 'names' ) {
 		$Valid = array();
-
 		if ( 'objects' != $type ) {
 			$type = 'names';
 		}
-
 		if ( ! isset( $Valid[ $type ] ) ) {
 			$all = get_post_types( array(), $type );
 			$Valid[ $type ] = array();
-
 			foreach ( $all as $post_type ) {
-				if ( self::supported_post_type( $post_type ) ) {
+				$suports = self::supported_post_type( $post_type );
+				if ( $suports  ) {
 					$Valid[ $type ][] = $post_type;
 				}
 			}
 		}
+		return $Valid[ $type ];
+	}
 
+	/**
+	 * Returns a list of all taxonomies that support custom sidebars.
+	 *
+	 * @since 3.0.7
+	 *
+	 * @uses   self::supported_post_type()
+	 * @param  string $type [names|objects] Defines details of return data.
+	 * @return array List of posttype names or objects, depending on the param.
+	 */
+	static public function get_taxonomies( $type = 'names', $_builtin = true ) {
+		$Valid = array();
+		if ( 'objects' != $type ) {
+			$type = 'names';
+		}
+		if ( ! isset( $Valid[ $type ] ) ) {
+			$all = get_taxonomies( array( 'public' => true, '_builtin' => $_builtin ), $type );
+			$Valid[ $type ] = array();
+			foreach ( $all as $one ) {
+				$Valid[ $type ][] = $one;
+			}
+		}
 		return $Valid[ $type ];
 	}
 
@@ -736,48 +786,9 @@ class CustomSidebars {
 		return 1 + self::get_category_level( $cat->category_parent );
 	}
 
-
-	// =========================================================================
-	// == ACTION HOOKS
-	// =========================================================================
-
-
-	/**
-	 * Callback for in_widget_form action
-	 *
-	 * Free version only.
-	 *
-	 * @since 2.0.1
-	 */
-	public function in_widget_form( $widget ) {
-		
-		if ( CSB_IS_PRO ) { return; }
-		?>
-		<input type="hidden" name="csb-buttons" value="0" />
-		<?php if ( ! isset( $_POST['csb-buttons'] ) ) : ?>
-			<div class="csb-pro-layer csb-pro-<?php echo esc_attr( $widget->id ); ?>">
-				<a href="#" class="button csb-clone-button"><?php _e( 'Clone', 'custom-sidebars' ); ?></a>
-				<a href="#" class="button csb-visibility-button"><span class="dashicons dashicons-visibility"></span> <?php _e( 'Visibility', 'custom-sidebars' ); ?></a>
-				<a href="<?php echo esc_url( CustomSidebars::$pro_url ); ?>" target="_blank" class="pro-info">
-				<?php printf(
-					__( 'Pro Version Features', 'custom-sidebars' ),
-					CustomSidebars::$pro_url
-				); ?>
-				</a>
-			</div>
-		<?php
-		endif;
-		
-	}
-
-
 	// =========================================================================
 	// == AJAX FUNCTIONS
 	// =========================================================================
-
-
-
-
 
 	/**
 	 * Output JSON data and die()
@@ -852,8 +863,8 @@ class CustomSidebars {
 		// Catch any unexpected output via output buffering.
 		ob_start();
 
-		$action = @$_POST['do'];
-		$get_action = @$_GET['do'];
+		$action = isset( $_POST['do'] )? $_POST['do']:null;
+		$get_action = isset( $_GET['do'] )? $_GET['do']:null;
 
 		/**
 		 * Notify all extensions about the ajax call.
@@ -870,5 +881,98 @@ class CustomSidebars {
 		 * @param  string $action The specified ajax action.
 		 */
 		do_action( 'cs_ajax_request_get', $get_action );
+	}
+
+	/**
+	 * This function will sort an array by key 'name'.
+	 *
+	 * @since 2.1.1.2
+	 *
+	 * @param $a Mixed - first value to compare.
+	 * @param $b Mixed - secound  value to compare.
+	 * @return integer value of comparation.
+	 */
+	public static function sort_sidebars_cmp_function( $a, $b ) {
+		if ( ! isset( $a['name'] ) || ! isset( $b['name'] ) ) {
+			return 0;
+		}
+		if ( function_exists( 'mb_strtolower' ) ) {
+			$a_name = mb_strtolower( $a['name'] );
+			$b_name = mb_strtolower( $b['name'] );
+		} else {
+			$a_name = strtolower( $a['name'] );
+			$b_name = strtolower( $b['name'] );
+		}
+		if ( $a_name == $b_name ) {
+			return 0;
+		}
+		return ($a_name < $b_name ) ? -1 : 1;
+	}
+
+	/**
+	 * Returns sidebars sorted by name.
+	 *
+	 * @since 2.1.1.2
+	 *
+	 * @param array $available Array of sidebars.
+	 * @return  array Sorted array of sidebars.
+	 */
+	public static function sort_sidebars_by_name( $available ) {
+		if ( empty( $available ) ) {
+			return $available;
+		}
+		foreach ( $available as $key => $data ) {
+			$available[ $key ]['cs-key'] = $key;
+		}
+		usort( $available, array( __CLASS__, 'sort_sidebars_cmp_function' ) );
+		$sorted = array();
+		foreach ( $available as $data ) {
+			$sorted[ $data['cs-key'] ] = $data;
+		}
+		return $sorted;
+	}
+
+	/**
+	 * Add "support" and (configure) "widgets" on plugin list page
+	 *
+	 * @since 2.1.1.8
+	 *
+	 */
+	public function add_action_links( $actions, $plugin_file, $plugin_data, $context ) {
+		if ( current_user_can( 'edit_theme_options' ) ) {
+			$actions['widgets'] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( admin_url( 'widgets.php' ) ),
+				__( 'Widgets', 'custom-sidebars' )
+			);
+		}
+		$url = 'https://wordpress.org/support/plugin/custom-sidebars';
+		
+		$actions['support'] = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( $url ),
+			__( 'Support', 'custom-sidebars' )
+		);
+		return $actions;
+	}
+
+	/**
+	 * Print JavaScript template.
+	 *
+	 * @since 3.0.1
+	 */
+	public function print_templates() {
+		wp_enqueue_script( 'wp-util' );
+?>
+	<script type="text/html" id="tmpl-custom-sidebars-new">
+		
+		<div class="custom-sidebars-add-new">
+			
+			<p><?php esc_html_e( 'Create a custom sidebar to get started.', 'custom-sidebars' ); ?></p>
+			
+		</div>
+		
+	</script>
+<?php
 	}
 };
