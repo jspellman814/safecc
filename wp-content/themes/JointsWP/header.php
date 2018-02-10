@@ -7,6 +7,10 @@
 
 		<!-- Force IE to use the latest rendering engine available -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <?php if ( is_front_page ) {
+            //google search console verification ?>
+	        <meta name="google-site-verification" content="2nt66IRHvtvVQSnfkBQH54-WWS_QCTbY8B_YPO7ofqA" />
+        <?php } ?>
 
 		<!-- Mobile Meta -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
