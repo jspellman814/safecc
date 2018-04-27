@@ -69,12 +69,13 @@ FOOTER STYLES
       }
     }
   }
-  #text-4 {
+  .bingo {
     &:before {
       content: '';
-      background: url('../images/bingo-icon.png') center center no-repeat;
-      width: 93px;
-      height: 81px;
+      background: url('../images/bingo-icon.png') left center no-repeat;
+      background-size: contain;
+      width: 55px;
+      height: 45px;
       display: block;
       margin-bottom: 10px;
     }
